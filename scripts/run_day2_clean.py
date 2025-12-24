@@ -1,8 +1,6 @@
 import logging
 import sys
 from pathlib import Path
-
-# Ensure src/ is importable when running as a script
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
