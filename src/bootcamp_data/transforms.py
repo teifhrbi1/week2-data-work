@@ -1,39 +1,40 @@
 import pandas as pd
 
-def enforce_schema(df: pd.DataFrame) -> pd.DataFrame:
-    return df.assign(
-        order_id=df["order_id"].astype("string"),
-        user_id=df["user_id"].astype("string"),
-        amount=pd.to_numeric(df["amount"], errors="coerce").astype("Float64"),
-        quantity=pd.to_numeric(df["quantity"], errors="coerce").astype("Int64"),
-    )
+def enforce_schema(df):
+    df["order_id"] = df["order_id"].astype("string")
+    df["user_id"] = df["user_id"].astype("string")
+    df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
+    df["quantity"] = pd.to_numeric(df["quantity"], errors="coerce")
+    return df
 
-def missingness_report(df: pd.DataFrame) -> pd.DataFrame:
-    n = len(df)
-    if n == 0:
-        # empty df -> avoid division by zero
-        return pd.DataFrame({"n_missing": df.isna().sum(), "p_missing": 0.0}).sort_values("n_missing", ascending=False)
+def parse_datetime(df, col="created_at"):
+    df[col] = pd.to_datetime(df[col], errors="coerce", utc=True)
+    return df
 
-    return (
-        df.isna().sum()
-          .rename("n_missing")
-          .to_frame()
-          .assign(p_missing=lambda t: t["n_missing"] / n)
-          .sort_values("p_missing", ascending=False)
-    )
+def add_time_parts(df, col="created_at"):
+    df["year"] = df[col].dt.year
+    df["month"] = df[col].dt.month
+    df["day"] = df[col].dt.day
+    df["hour"] = df[col].dt.hour
+    df["weekday"] = df[col].dt.weekday
+    df["date_only"] = df[col].dt.date
+    return df
 
-def add_missing_flags(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
-    out = df.copy()
-    for c in cols:
-        out[f"{c}__isna"] = out[c].isna()
-    return out
+def iqr_bounds(s, k=1.5):
+    q1 = s.quantile(0.25)
+    q3 = s.quantile(0.75)
+    iqr = q3 - q1
+    lower_bound = q1 - k * iqr
+    upper_bound = q3 + k * iqr
+    return lower_bound, upper_bound
 
-def normalize_text(s: pd.Series) -> pd.Series:
-    # normalize: strip + lower, keep pandas string dtype
-    return s.astype("string").str.strip().str.lower()
+def winsorize(s, lo=0.01, hi=0.99):
+    lower_limit = s.quantile(lo)
+    upper_limit = s.quantile(hi)
+    return s.clip(lower=lower_limit, upper=upper_limit)
 
-def apply_mapping(s: pd.Series, mapping: dict[str, str]) -> pd.Series:
-    # map known values; keep unknown values unchanged
-    s2 = s.astype("string")
-    mapped = s2.map(mapping)
-    return mapped.fillna(s2).astype("string")
+def add_outlier_flag(df, col, k=1.5):
+    low, high = iqr_bounds(df[col], k=k)
+    new_col_name = col + "__is_outlier"
+    df[new_col_name] = (df[col] < low) | (df[col] > high)
+    return df
