@@ -1,73 +1,40 @@
 # AI Professionals Bootcamp - Week 2
-<<<<<<< HEAD
-=======
----
 ## Progress Log
 
-### ✅ Day 1: Offline-First ETL Foundations
-**Goal:** Build a robust scaffold and idempotent pipeline.
-- **Scaffold:** Established `data/`, `src/`, `scripts/`, `reports/`, and `notebooks/`.
-- **Centralized Config:** Implemented `config.py` for path management and `io.py` for typed CSV/Parquet operations.
-- **Schema Enforcement:** Enforced IDs as strings and numeric fields as nullable (Int64/Float64) via `transforms.py`.
-- **Output:** Produced initial `orders.parquet` and `_run_meta.json`.
+### Day 1: Offline-First ETL Foundations
+**Goal:** Set up the project and produce the first processed output.
+- Created the project folders: `data/`, `src/`, `scripts/`, `reports/`, `notebooks/`.
+- Added path utilities and typed IO helpers.
+- Standardized types (IDs as strings, numeric fields as nullable).
+- Output: processed Parquet + `_run_meta.json`.
 
-### ✅ Day 2: Cleaning & Data Quality Checks
-**Goal:** Implement "fail-fast" validations and standardize data.
-- **Quality Assurance:** Created `quality.py` to assert non-empty datasets and required columns.
-- **Standardization:** Normalized categorical fields (e.g., `status` → `status_clean`) and added missingness flags (`amount__isna`).
-- **Audit:** Generated `reports/missingness_orders.csv` to track data gaps.
-- **Output:** Produced `orders_clean.parquet`.
+### Day 2: Cleaning & Data Quality Checks
+**Goal:** Validate inputs and clean the data.
+- Added required-column checks and non-empty validations.
+- Cleaned categorical values (e.g., `status` → `status_clean`) and added missingness flags (e.g., `amount__isna`).
+- Produced missingness summaries for review.
+- Output: `orders_clean.parquet`.
 
-### 🚀 Day 3: Datetime, Outliers, and Safe Joins
-**Goal:** Transform clean data into an "Analytics-Ready" table.
-- **Datetime Engineering:** - Safe parsing with `errors="coerce"` and UTC standardization.
-    - Extracted temporal features: `month`, `hour`, and `day_of_week`.
-- **Outlier Management:** - Implemented IQR bounds detection.
-    - Added `is_outlier` flags and applied Winsorization (capping at 1st/99th percentiles) for stable visualizations.
-- **Safe Joins:** - Merged `orders` and `users` using `many_to_one` validation to prevent row duplication.
-    - Audited match rates to ensure join integrity.
-- **Output:** Final consolidated `analytics_table.parquet`.
+### Day 3: Datetime, Outliers, and Safe Joins
+**Goal:** Build an analytics-ready table.
+- Parsed datetime safely (`errors="coerce"`) and extracted time features (e.g., `month`, `day_of_week`).
+- Added outlier flags and applied winsorization for analysis.
+- Joined `orders` and `users` with validation and match-rate checks.
+- Output: `analytics_table.parquet`.
 
+### Day 4: EDA + Visualizations + Bootstrap
+**Goal:** Explore the data and export figures.
+- Completed `notebooks/eda.ipynb` using `data/processed/`.
+- Built key visuals (trend, distribution, breakdown).
+- Used bootstrap sampling to estimate confidence intervals for key metrics.
+- Exported figures to `reports/figures/`.
+- Output: EDA notebook + PNG figures.
 
+### Day 5: Reporting + Reproducibility Docs
+**Goal:** Document results and make the workflow reproducible.
+- Wrote `reports/summary.md` (findings, definitions, caveats, next questions).
+- Updated README with setup + ETL + outputs + EDA steps.
+- Verified the pipeline produces the same outputs when re-run.
+- Output: complete documentation.
 
->>>>>>> 9d1477d (docs: finalize readme with day 3 and 4 details)
 ---
-## Progress Log
-
-<<<<<<< HEAD
-### ✅ Day 1: Offline-First ETL Foundations
-**Goal:** Build a robust scaffold and idempotent pipeline.
-- **Scaffold:** Established `data/`, `src/`, `scripts/`, `reports/`, and `notebooks/`.
-- **Centralized Config:** Implemented `config.py` for path management and `io.py` for typed CSV/Parquet operations.
-- **Schema Enforcement:** Enforced IDs as strings and numeric fields as nullable (Int64/Float64) via `transforms.py`.
-- **Output:** Produced initial `orders.parquet` and `_run_meta.json`.
-
-### ✅ Day 2: Cleaning & Data Quality Checks
-**Goal:** Implement "fail-fast" validations and standardize data.
-- **Quality Assurance:** Created `quality.py` to assert non-empty datasets and required columns.
-- **Standardization:** Normalized categorical fields (e.g., `status` → `status_clean`) and added missingness flags (`amount__isna`).
-- **Audit:** Generated `reports/missingness_orders.csv` to track data gaps.
-- **Output:** Produced `orders_clean.parquet`.
-
-### 🚀 Day 3: Datetime, Outliers, and Safe Joins
-**Goal:** Transform clean data into an "Analytics-Ready" table.
-- **Datetime Engineering:** - Safe parsing with `errors="coerce"` and UTC standardization.
-    - Extracted temporal features: `month`, `hour`, and `day_of_week`.
-- **Outlier Management:** - Implemented IQR bounds detection.
-    - Added `is_outlier` flags and applied Winsorization (capping at 1st/99th percentiles) for stable visualizations.
-- **Safe Joins:** - Merged `orders` and `users` using `many_to_one` validation to prevent row duplication.
-    - Audited match rates to ensure join integrity.
-- **Output:** Final consolidated `analytics_table.parquet`.
-
-=======
-## Project Structure
-```text
-├── data/
-│   ├── raw/            # Original CSV files
-│   └── processed/      # Parquet outputs (Day 1, 2, 3)
-├── src/
-│   └── bootcamp_data/  # Core logic (io, quality, transforms, joins)
-├── scripts/            # Execution scripts (run_day1, run_day2, run_day3)
-├── notebooks/          # EDA and statistical analysis
-└── reports/            # CSV summaries and Plotly figures
->>>>>>> 9d1477d (docs: finalize readme with day 3 and 4 details)

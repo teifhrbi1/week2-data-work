@@ -1,0 +1,27 @@
+{
+  "timestamp_utc": "2025-12-25T19:59:50.847515+00:00",
+  "row_counts": {
+    "orders_raw": 5,
+    "users_raw": 4,
+    "orders_clean": 5,
+    "analytics_table": 1
+  },
+  "missing": {
+    "orders_raw": {
+      "order_id": 0,
+      "user_id": 0,
+      "amount": 1,
+      "quantity": 1,
+      "created_at": 0,
+      "status": 0,
+      "status_clean": 0,
+      "amount__isna": 0,
+      "quantity__isna": 0
+    },
+    "users_raw": {
+      "user_id": 0,
+      "country": 0,
+      "signup_date": 0
+    }
+  }
+}
